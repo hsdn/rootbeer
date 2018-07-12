@@ -1,0 +1,11 @@
+{
+	"autoTrash": true,
+	"autoTrashItems": {
+		"beer": true,
+		"wine": true,
+		"lotus": true,
+		"moongourd": true,
+		"afro": true,
+		"chefHat": true
+	}
+}
