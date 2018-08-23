@@ -90,7 +90,7 @@ module.exports = function RootBeer(dispatch) {
 					if(item.slot < 40) continue // First 40 slots are reserved for equipment, etc.
 
 					if(item.id == BAMARAMA_BOX) box = true
-					else if(config.autoTrash)
+					else if(config.autoTrash) {
 						for(let id in TRASH)
 							if(item.id === Number(id)) {
 								// Trashing large stacks of items is more bandwidth efficient
@@ -99,6 +99,7 @@ module.exports = function RootBeer(dispatch) {
 
 								break
 							}
+					}
 					else if((idx = HATS.indexOf(item.id)) !== -1) hats[idx].push(item.slot)
 				}
 
