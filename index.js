@@ -1,5 +1,3 @@
-const config = require('./config')
-
 const BAMARAMA_BOX = 80086,
 	ROOT_BEER = 80081,
 	TRASH = {
@@ -15,11 +13,26 @@ const BAMARAMA_BOX = 80086,
 
 const Command = require('command')
 
-module.exports = function RootBeer(dispatch) {
-	const command = Command(dispatch)
+module.exports = function RootBeer(mod) {
+	const SETTINGS_VERSION = 1
+	if(mod.settings._version !== SETTINGS_VERSION)
+		mod.settings = {
+			_version: SETTINGS_VERSION,
+			autoTrash: true,
+			autoTrashItems: {
+				beer: true,
+				wine: true,
+				lotus: true,
+				moongourd: true,
+				afro: true,
+				chefHat: true
+			}
+		}
+
+	const {command} = mod.require
 
 	let hooks = [],
-		gameId = null,
+		gameId = -1n,
 		enabled = false,
 		timer = null,
 		myLocation = null,
@@ -36,12 +49,12 @@ module.exports = function RootBeer(dispatch) {
 		else stop()
 	})
 
-	dispatch.hook('S_LOGIN', 10, event => { ({gameId} = event) })
-	dispatch.hook('S_SPAWN_ME', 2, event => { myLocation = event })
-	dispatch.hook('C_PLAYER_LOCATION', 3, event => { myLocation = event })
+	mod.hook('S_LOGIN', 10, event => { ({gameId} = event) })
+	mod.hook('S_SPAWN_ME', 3, event => { myLocation = event })
+	mod.hook('C_PLAYER_LOCATION', 5, event => { myLocation = event })
 
 	function openBox() {
-		dispatch.toServer('C_USE_ITEM', 3, {
+		mod.send('C_USE_ITEM', 3, {
 			gameId,
 			id: BAMARAMA_BOX,
 			amount: 1,
@@ -62,19 +75,19 @@ module.exports = function RootBeer(dispatch) {
 	}
 
 	function load() {
-		function hook() { hooks.push(dispatch.hook(...arguments)) }
+		function hook() { hooks.push(mod.hook(...arguments)) }
 
 		let invenItems = null
 
-		if(invenHook) dispatch.unhook(invenHook)
+		if(invenHook) mod.unhook(invenHook)
 
-		invenHook = dispatch.hook('S_INVEN', 12, event => {
+		invenHook = mod.hook('S_INVEN', 16, event => {
 			invenItems = event.first ? event.items : invenItems.concat(event.items)
 
 			if(!event.more) {
 				let used = 0
 
-				if(config.autoTrash)
+				if(mod.settings.autoTrash)
 					for(let item of invenItems)
 						if(item.slot >= 40)
 							used++
@@ -90,11 +103,11 @@ module.exports = function RootBeer(dispatch) {
 					if(item.slot < 40) continue // First 40 slots are reserved for equipment, etc.
 
 					if(item.id == BAMARAMA_BOX) box = true
-					else if(config.autoTrash) {
+					else if(mod.settings.autoTrash) {
 						for(let id in TRASH)
 							if(item.id === Number(id)) {
 								// Trashing large stacks of items is more bandwidth efficient
-								if(config.autoTrashItems[TRASH[id]] && (strictTrash || HATS.includes(item.id) || item.amount >= 99 || !enabled))
+								if(mod.settings.autoTrashItems[TRASH[id]] && (strictTrash || HATS.includes(item.id) || item.amount >= 99 || !enabled))
 									deleteItem(item.slot, item.amount)
 
 								break
@@ -110,7 +123,7 @@ module.exports = function RootBeer(dispatch) {
 
 				invenItems = null
 
-				if(!enabled) dispatch.unhook(invenHook) // Unhook after we've cleaned up
+				if(!enabled) mod.unhook(invenHook) // Unhook after we've cleaned up
 			}
 		})
 
@@ -130,21 +143,19 @@ module.exports = function RootBeer(dispatch) {
 
 	function unload() {
 		if(hooks.length) {
-			for(let h of hooks) dispatch.unhook(h)
+			for(let h of hooks) mod.unhook(h)
 
 			hooks = []
 		}
 	}
 
 	function deleteItem(slot, amount) {
-		dispatch.toServer('C_DEL_ITEM', 2, {
+		mod.send('C_DEL_ITEM', 2, {
 			gameId,
 			slot: slot - 40,
 			amount
 		})
 	}
 
-	function mergeItem(slotFrom, slotTo) {
-		dispatch.toServer('C_MERGE_ITEM', 1, {slotFrom, slotTo})
-	}
+	function mergeItem(slotFrom, slotTo) { mod.send('C_MERGE_ITEM', 1, {slotFrom, slotTo}) }
 }
