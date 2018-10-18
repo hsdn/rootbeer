@@ -11,8 +11,6 @@ const BAMARAMA_BOX = 80086,
 	HATS = [80089, 80090], // Afro, Chef's
 	ITEMS = [ROOT_BEER, ...Object.keys(TRASH).map(id => Number(id))]
 
-const Command = require('command')
-
 module.exports = function RootBeer(mod) {
 	const SETTINGS_VERSION = 1
 	if(mod.settings._version !== SETTINGS_VERSION)
