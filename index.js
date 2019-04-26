@@ -47,7 +47,7 @@ module.exports = function RootBeer(mod) {
 		else stop()
 	})
 
-	mod.hook('S_LOGIN', 12, event => { ({gameId} = event) })
+	mod.hook('S_LOGIN', mod.patchVersion < 81 ? 12 : 13, event => { ({gameId} = event) })
 	mod.hook('S_SPAWN_ME', 3, event => { myLocation = event })
 	mod.hook('C_PLAYER_LOCATION', 5, event => { myLocation = event })
 
