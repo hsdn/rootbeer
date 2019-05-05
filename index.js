@@ -79,7 +79,7 @@ module.exports = function RootBeer(mod) {
 
 		if(invenHook) mod.unhook(invenHook)
 
-		invenHook = mod.hook('S_INVEN', 16, event => {
+		invenHook = mod.hook('S_INVEN', 18, event => {
 			invenItems = event.first ? event.items : invenItems.concat(event.items)
 
 			if(!event.more) {
