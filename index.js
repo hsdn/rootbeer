@@ -61,11 +61,11 @@ module.exports = function RootBeer(mod) {
 			unk4: true
 		})
 
-		timer = setTimeout(openBox, 5000) // Fallback in case a box failed to open
+		timer = mod.setTimeout(openBox, 5000) // Fallback in case a box failed to open
 	}
 
 	function stop() {
-		clearTimeout(timer)
+		mod.clearTimeout(timer)
 		unload()
 		enabled = false
 		command.message('Auto-Rootbeer stopped.' + (!statTotal ? '' : ` Unboxed ${statRootBeers}/${statTotal} (${(Math.floor(statRootBeers / statTotal * 1000) / 10) || '0'}%).`))
@@ -127,7 +127,7 @@ module.exports = function RootBeer(mod) {
 
 		hook('S_SYSTEM_MESSAGE_LOOT_ITEM', 1, event => {
 			if(ITEMS.includes(event.item)) {
-				clearTimeout(timer)
+				mod.clearTimeout(timer)
 
 				statTotal++
 				if(event.item === ROOT_BEER) statRootBeers++
