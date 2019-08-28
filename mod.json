@@ -1,6 +1,10 @@
 {
 	"name": "rootbeer",
 	"update": "github:tera-mods/rootbeer",
+	"dependencies": {
+		"command": "github:tera-mods/command",
+		"game": "github:tera-mods/game"
+	},
 	"title": "Rootbeer",
 	"author": "Pinkie Pie",
 	"description": "Automatically opens Bamarama Boxes and deletes unwanted items."
