@@ -1,0 +1,16 @@
+{
+    "disableAutoUpdate": false,
+    "name": "Rootbeer",
+    "author": "HSDN / Pinkie Pie",
+    "description": "Automatically opens Bamarama Boxes and deletes unwanted items.",
+    "version": "1.0",
+    "options": {
+        "niceName": "Rootbeer",
+        "guiName": "Rootbeer",
+        "settingsVersion": 1,
+        "settingsFile": "config.json",
+        "settingsMigrator": "settings_migrator.js"
+    },
+    "servers": ["https://raw.githubusercontent.com/hsdn/rootbeer/master/"],
+    "supportUrl": "https://github.com/hsdn/rootbeer/issues"
+}
