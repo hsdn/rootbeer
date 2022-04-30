@@ -1,5 +1,9 @@
-TeraToolbox Module
+# rootbeer
 
-Automatically opens Bamarama Boxes and deletes unwanted items.
+TeraToolbox Module for automatically opens Bamarama Boxes and deletes unwanted items.
 
-Usage: Type `rootbeer` in toolbox chat to toggle.
+## Commands
+
+Toolbox(/8) | Command description
+--- | ---
+**rootbeer** | Toggle boxes opening.
